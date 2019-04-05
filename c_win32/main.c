@@ -52,7 +52,6 @@ char* getProcessName()
     {
         Path = path;
         Slash = strrchr(Path, 92); Slash++;            
-        printf("\n\nCurrent working program is: %s\n", Slash);
         return Slash;
         free(path);
         }        
