@@ -1,7 +1,7 @@
 from ctypes import *
-import element
-import request
 import time
+import json
+import serialize
 
 def main():
     programs = {}
@@ -12,6 +12,7 @@ def main():
         if programs.get(name) != None:
             programs[name] = programs[name] + 5
             print(time.strftime('%H:%M:%S', time.gmtime(programs[name])))
+            serialize.serialize(programs)
             time.sleep(5)
         else:
             programs[name] = 5
