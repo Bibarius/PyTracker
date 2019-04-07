@@ -1,22 +1,32 @@
+import os, os.path
+import datetime
 from ctypes import *
 import time
-import json
 import serialize
+import deserialize
+
 
 def main():
-    programs = {}
-    mylib = windll.LoadLibrary("c_win32/main.dll")
+
+    workingtime = 0
+    programs = deserialize.deserialize()
+    mylib = windll.LoadLibrary("main.dll")
     mylib.getProcessName.restype = c_char_p
     while True:
-        name = mylib.getProcessName()
+        if workingtime % 600 == 0:
+            serialize.serialize(programs)
+        response = mylib.getProcessName()
+        name = response.decode('utf-8')
+        if name == "error":
+            continue
         if programs.get(name) != None:
             programs[name] = programs[name] + 5
-            print(time.strftime('%H:%M:%S', time.gmtime(programs[name])))
-            serialize.serialize(programs)
             time.sleep(5)
+            workingtime += 5
         else:
             programs[name] = 5
             time.sleep(5)
+            workingtime += 5
         
     
 

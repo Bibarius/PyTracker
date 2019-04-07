@@ -29,24 +29,25 @@ const char *Path;
 
 char* getProcessName()
 {
+    char* error = "error";
     path = malloc(sizeof(WCHAR[MAX_PATH]));      //  выделяем память для строки с названием программы
     DWORD charsCarried = MAX_PATH;
 
     ForeGroundWindow = GetForegroundWindow();
     if(!(GetWindowThreadProcessId(ForeGroundWindow, &ProcessId)))       //получаем процесс, который запустил окно, на котором сейчас фокус
-    {
-        printf("error getting the process-ownre of the window\n");
+    { 
         free(path);
+        return error;
     }    
     if(!(hOpenProcess = OpenProcess(PROCESS_ALL_ACCESS | PROCESS_QUERY_INFORMATION, FALSE, ProcessId)))     //получаем HANDLE этого процесса
     {
-        printf("error oppening the process-owner\n");
         free(path);
+        return error;
     }
     if(!(QueryFullProcessImageNameA(hOpenProcess, 0, path, &charsCarried)))
     {
-        printf("error querying process-owner name\n");
         free(path);
+        return error;
     }
     else
     {
